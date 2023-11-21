@@ -28,7 +28,7 @@ Follow these steps to modify animations in MC MTAR files:
 4. **Complete the Modification**: Your specified animation block will be extracted or replaced accordingly.
 
 ### Extracting and Converting 3DS Animations
-1. **Extract Animation Blocks from Info File**: Use this to obtain the offsets required for extracting 3DS animations.
+1. **Extract Animation Blocks from Info File**: Use this to obtain the offsets required for extracting 3DS animations. PLEASE download file from the code called mtardiction.txt to get 3DS snake's animations.
 2. **Convert 3DS to MC**: Select a 3DS animation block to convert it into a format compatible with the Master Collection.
 3. **Convert All in Folder**: Automatically convert all 3DS animations in a folder to Master Collection compatible animations.
 
