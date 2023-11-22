@@ -16,10 +16,13 @@ def setup_mc_mtar_tab(tab):
     file_path = None  # Define file_path within the scope of the setup_mc_mtar_tab function
 
     def open_file():
-        nonlocal file_path
-        file_path = filedialog.askopenfilename(filetypes=[("MTAR files", "*.mtar")])
-        if file_path:
-            display_data_table()
+        response = messagebox.askokcancel("Backup Reminder", 
+                                      "Please make a backup of your MTAR file before proceeding!")
+        if response:
+            nonlocal file_path
+            file_path = filedialog.askopenfilename(filetypes=[("MTAR files", "*.mtar")])
+            if file_path:
+                display_data_table()
 
     def display_data_table():
         if file_path:  # Check if file_path is not None

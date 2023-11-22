@@ -52,7 +52,8 @@ def import_new_data(file_path, block_index):
     mtar_data = read_mtar(file_path)
     mtcm_data_table, mtcm_data_end_offset = parse_mtcm_data_table(mtar_data)
 
-    if mtcm_data_table and 0 <= block_index < len(mtcm_data_table):
+    # Prevent modification of the last block by checking block_index
+    if mtcm_data_table and 0 <= block_index < (len(mtcm_data_table) - 1):
         open_path = filedialog.askopenfilename(filetypes=[("Binary files", "*.bin")])
         
         if open_path:
@@ -94,7 +95,8 @@ def export_all_blocks(file_path):
     if mtcm_data_table:
         export_directory = filedialog.askdirectory()
         if export_directory:
-            for i, (data_offset, _, data_size, _) in enumerate(mtcm_data_table):
+            # Loop over all entries except the last one
+            for i, (data_offset, _, data_size, _) in enumerate(mtcm_data_table[:-1]):  # Exclude the last entry
                 block_data = mtar_data[data_offset:data_offset+data_size]
                 save_path = os.path.join(export_directory, f"block_{i}.bin")
                 with open(save_path, 'wb') as file:
@@ -103,6 +105,7 @@ def export_all_blocks(file_path):
     else:
         messagebox.showerror("Error", "MTCM data table not found.")
 
+
 def import_all_blocks(file_path):
     mtar_data = read_mtar(file_path)
     mtcm_data_table, mtcm_data_end_offset = parse_mtcm_data_table(mtar_data)
@@ -110,7 +113,8 @@ def import_all_blocks(file_path):
     if mtcm_data_table:
         import_directory = filedialog.askdirectory()
         if import_directory:
-            for i in range(len(mtcm_data_table)):
+            # Loop over all entries except the last one
+            for i in range(len(mtcm_data_table) - 1):  # Exclude the last entry
                 open_path = os.path.join(import_directory, f"block_{i}.bin")
                 if os.path.exists(open_path):
                     with open(open_path, 'rb') as file:
