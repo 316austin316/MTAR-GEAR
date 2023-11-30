@@ -1,14 +1,14 @@
 # MTAR GEAR
 
-MTAR GEAR is a specialized tool designed for the Metal Gear Solid 3: Master Collection version on PC. It facilitates the modification and replacement of animations within the game, utilizing the MTAR file format.
+MTAR GEAR allows for modification and swapping of animations of MGS games on PC.
 
 ## Features
 
-- **Open and Read MTAR Files**: Easily load MTAR files to view their contents.
-- **Animation Extraction**: Extract specific animation blocks from MTAR files for detailed analysis and modification.
-- **Replace Animations**: Import new animations into existing MTAR files.
-- **Multi-Platform Support**: Separate tabs and functionalities for different versions of the game, including 3DS and MGS4 formats (experimental).
-- **MTAR Data Table Display**: View detailed information about the contents of MTAR files.
+- **Open and Read MTAR/MAR Files**: Easily load MTAR/MAR files to view their contents.
+- **Animation Extraction**: Extract specific animation blocks from MTAR/MAR files for detailed analysis and modification.
+- **Replace Animations**: Import new animations into existing MTAR/MAR files.
+- **Multi-Platform Support**: Separate tabs and functionalities for different versions of the game, including 3DS and MGS4 formats (experimental). As well as support for Metal Gear Solid 2.
+- **MTAR/MAR Data Table Display**: View detailed information about the contents of MTAR/MAR files.
 
 ## In Progress
 
@@ -43,6 +43,10 @@ Follow these steps to modify animations in MC MTAR files:
 4. **Convert All in Folder**: Convert all MGS4 animations in a folder to the Master Collection format.
 5. **Export MTCM Data Table**: Export the MTCM data table from the MGS4 MTAR file.
 6. **Note**: Some features are experimental and may vary in effectiveness. Endian swapping for MGS4 will be implemented in the next version.
+
+### MGS 2 Tab
+Same format as MC MTAR basically for MGS 3 with one additional button:
+**Convert MGS2 to MGS3**: Convert individual MGS2 animations to the MGS3 MTAR format. Very experimental and known to crash game (sorry!). Will update if it's possible.
 
 ## Acknowledgements
 
