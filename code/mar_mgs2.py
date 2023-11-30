@@ -112,6 +112,16 @@ def import_new_block(file_path, block_index, new_block_path):
 
         else:
             raise ValueError("Invalid block index")
+        
+def export_block(file_path, offset, size, block_index):
+    with open(file_path, 'rb') as file:
+        file.seek(offset)
+        block_data = file.read(size + 4)  # Include 4 extra bytes
+
+    block_file_name = f"block_{block_index}.bin"
+    with open(block_file_name, "wb") as out_file:
+        out_file.write(block_data)
+
 
 
 

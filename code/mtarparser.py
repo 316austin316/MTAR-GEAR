@@ -278,6 +278,7 @@ def setup_mtar_mgs4_tab(tab):
     
 def setup_mar_mgs2_tab(tab):
     file_path = None
+    block_index_var = tk.StringVar()
 
     # Initialize Text widgets for displaying header, block info, and data table
     info_text_widget = tk.Text(tab, height=10, width=80)
@@ -349,25 +350,39 @@ def setup_mar_mgs2_tab(tab):
                     refresh_mar_display()  # Refresh the GUI
                 except ValueError as e:
                         messagebox.showerror("Error", str(e))
+                        
+    def export_single_block():
+        if file_path and block_index_var.get().isdigit():
+            block_index = int(block_index_var.get())
+            header = mar_mgs2.read_mar(file_path)
+            blocks = mar_mgs2.extract_blocks(file_path, header)
+
+            if 0 <= block_index < len(blocks):
+                offset, size = blocks[block_index]
+                mar_mgs2.export_block(file_path, offset, size, block_index)
+                messagebox.showinfo("Export Complete", f"Block {block_index} exported successfully.")
+            else:
+                messagebox.showerror("Error", "Invalid block index.")
                     
-    open_button = tk.Button(tab, text="Open MGS2 MAR File", command=open_mar_file)
+    open_button = tk.Button(tab, text="Open MAR File", command=open_mar_file)
     open_button.pack(pady=10)
                     
-    label_block_index = tk.Label(tab, text="Block Index to Replace:")
+    label_block_index = tk.Label(tab, text="Block Index:")
     label_block_index.pack()
-    entry_block_index = tk.Entry(tab)
+    entry_block_index = tk.Entry(tab, textvariable=block_index_var)
     entry_block_index.pack()
 
     import_button = tk.Button(tab, text="Import Animation Block", command=import_block)
     import_button.pack(pady=10)
-
-    convert_button = tk.Button(tab, text="Convert MGS2 to MGS3", command=convert_mgs2_to_mgs3)
-    convert_button.pack(pady=10)
-
-
-
-    export_button = tk.Button(tab, text="Export Animation Blocks", command=export_animation_blocks)
+    
+    export_single_block_button = tk.Button(tab, text="Export Animation Block", command=export_single_block)
+    export_single_block_button.pack(pady=10)
+    
+    export_button = tk.Button(tab, text="Export All Animation Blocks", command=export_animation_blocks)
     export_button.pack(pady=10)
+    
+    conversion_button = tk.Button(tab, text="Convert MGS2 to MGS3 (Under Construction)", state=tk.DISABLED)
+    conversion_button.pack(pady=10)
 
 
 
