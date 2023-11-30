@@ -15,6 +15,7 @@ MTAR GEAR allows for modification and swapping of animations of MGS games on PC.
 - **Import All Animations Feature**: Currently being refined to address offset problems.
 - **Support for More 3DS Animations**: Enhancement in progress; additional 3DS MTAR files are needed for testing.
 - **Support for Additional MGS Games**: Plans to extend support, pending acquisition of more test files from various MGS games.
+- **Animation Conversion**: Working on being able to convert animations to MGS3 MTAR Format.
 
 ## Usage
 
