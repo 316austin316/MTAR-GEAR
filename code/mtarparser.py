@@ -8,6 +8,7 @@ import mtar_mc
 import mtar_editor
 import mtar_mgs4
 from PIL import Image, ImageTk
+import mar_mgs2
 
 
 
@@ -274,6 +275,99 @@ def setup_mtar_mgs4_tab(tab):
     
     export_table_button = tk.Button(tab, text="Export MTCM Data Table", command=export_data_table)
     export_table_button.pack(pady=10)
+    
+def setup_mar_mgs2_tab(tab):
+    file_path = None
+
+    # Initialize Text widgets for displaying header, block info, and data table
+    info_text_widget = tk.Text(tab, height=10, width=80)
+    info_text_widget.pack(padx=10, pady=10)
+
+    def open_mar_file():
+        response = messagebox.askokcancel("Backup Reminder", 
+                                          "Please make a backup of your MAR file before proceeding!")
+        if response:
+            nonlocal file_path
+            file_path = filedialog.askopenfilename(filetypes=[("MGS2 MAR files", "*.mar")])
+            if file_path:
+                display_mar_file_info()
+
+    def display_mar_file_info():
+        if file_path:
+            header = mar_mgs2.read_mar(file_path)
+            data_table = mar_mgs2.parse_mtcm_data_table(file_path, header)
+            # Display header and data table information in the Text widget
+            info_text_widget.delete("1.0", tk.END)
+            info_text_widget.insert(tk.END, f"Magic: {header.magic}\n")
+            info_text_widget.insert(tk.END, f"Max Joint: {header.maxJoint}\n")
+            info_text_widget.insert(tk.END, f"Num Motion: {header.numMotion}\n")
+            info_text_widget.insert(tk.END, f"MTCM Offset: {header.mtcmOffset}\n")
+            for offset, size in data_table:
+                info_text_widget.insert(tk.END, f"Offset: {offset}, Size: {size}\n")
+
+    def export_animation_blocks():
+        if file_path:
+            header = mar_mgs2.read_mar(file_path)
+            blocks = mar_mgs2.extract_blocks(file_path, header)
+            mar_mgs2.export_blocks(file_path, blocks)
+            messagebox.showinfo("Export Complete", "Animation blocks exported successfully.")
+            
+    def convert_mgs2_to_mgs3():
+        block_file_path = filedialog.askopenfilename(filetypes=[("Binary files", "*.bin")])
+        if block_file_path:
+            with open(block_file_path, 'rb') as file:
+                block_data = bytearray(file.read())
+            
+            modified_data = mar_mgs2.modify_block_data(block_data)
+
+            save_path = filedialog.asksaveasfilename(defaultextension=".bin", filetypes=[("Binary files", "*.bin")])
+            if save_path:
+                with open(save_path, 'wb') as file:
+                    file.write(modified_data)
+                messagebox.showinfo("Conversion Complete", "MGS2 block converted to MGS3 format successfully.")
+                
+    def refresh_mar_display():
+        if file_path:
+            header = mar_mgs2.read_mar(file_path)
+            data_table = mar_mgs2.parse_mtcm_data_table(file_path, header)
+            info_text_widget.delete("1.0", tk.END)
+            info_text_widget.insert(tk.END, f"Magic: {header.magic}\n")
+            info_text_widget.insert(tk.END, f"Max Joint: {header.maxJoint}\n")
+            info_text_widget.insert(tk.END, f"Num Motion: {header.numMotion}\n")
+            info_text_widget.insert(tk.END, f"MTCM Offset: {header.mtcmOffset}\n")
+            for offset, size in data_table:
+                info_text_widget.insert(tk.END, f"Offset: {offset}, Size: {size}\n")
+                
+    def import_block():
+        if file_path:
+            block_index = int(entry_block_index.get())
+            new_block_path = filedialog.askopenfilename(filetypes=[("Binary files", "*.bin")])
+            if new_block_path:
+                try:
+                    mar_mgs2.import_new_block(file_path, block_index, new_block_path)
+                    messagebox.showinfo("Success", f"Block {block_index} imported successfully.")
+                    refresh_mar_display()  # Refresh the GUI
+                except ValueError as e:
+                        messagebox.showerror("Error", str(e))
+                    
+    open_button = tk.Button(tab, text="Open MGS2 MAR File", command=open_mar_file)
+    open_button.pack(pady=10)
+                    
+    label_block_index = tk.Label(tab, text="Block Index to Replace:")
+    label_block_index.pack()
+    entry_block_index = tk.Entry(tab)
+    entry_block_index.pack()
+
+    import_button = tk.Button(tab, text="Import Animation Block", command=import_block)
+    import_button.pack(pady=10)
+
+    convert_button = tk.Button(tab, text="Convert MGS2 to MGS3", command=convert_mgs2_to_mgs3)
+    convert_button.pack(pady=10)
+
+
+
+    export_button = tk.Button(tab, text="Export Animation Blocks", command=export_animation_blocks)
+    export_button.pack(pady=10)
 
 
 
@@ -306,5 +400,10 @@ setup_mtar_editor_tab(mtar_editor_tab)
 mtar_mgs4_tab = ttk.Frame(notebook)
 notebook.add(mtar_mgs4_tab, text="MGS4 MTAR")
 setup_mtar_mgs4_tab(mtar_mgs4_tab)
+
+# Add the MGS2 MTAR tab
+mar_mgs2_tab = ttk.Frame(notebook)
+notebook.add(mar_mgs2_tab, text="MGS2 MAR")
+setup_mar_mgs2_tab(mar_mgs2_tab)
 
 root.mainloop()
